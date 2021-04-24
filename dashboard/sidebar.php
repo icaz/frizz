@@ -46,6 +46,13 @@
                                 <p>E-mail lista</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="invite.php" class="nav-link">
+                                <i class="nav-icon fas fa-phone"></i>
+                                <p>Preporuči</p>
+                            </a>
+                        </li>
+
                     </ul>
                 </nav>
 

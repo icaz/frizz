@@ -36,16 +36,30 @@
         color: yellow; /* you need this to specify a color to pulse to */
     }
     @keyframes alertPulse2 {
-        0% { color: red; opacity: 1; font-size: 1em;}
-        50% {color: whitesmoke; opacity: 1; font-size: 0.9em;}
-        100% {opacity: black; color: red; opacity: 1; font-size: 1em;}
+        0% { color: red;}
+        50% {color: blue;}
+        100% {color: red;}
     }
     .alertPulse2-css {
-        animation: alertPulse2 2s ease-out;
+        animation: alertPulse2 4s ease-out;
         animation-iteration-count: infinite;
-        font-size: 1em;
-        opacity: 1;
         color: red; /* you need this to specify a color to pulse to */
+        font-weight: bolder;
+        border: 1px solid red;
     }
+
+    @keyframes formPulse {
+        0% {border: 1px solid red;}
+        50% {border: 1px dotted grey;}
+        100% {border: 1px solid red;}
+    }
+    .formPulse-css {
+        animation: formPulse 2s ease-out;
+        animation-iteration-count: infinite;
+        font-weight: bolder;
+        border: 1px solid red;
+    }
+
+    
     </style>
 </head>

@@ -30,22 +30,21 @@ if (isset($_GET['datum']) && $_GET['datum'] <> "") {
     $sutra = strftime("%A, %d. %B %Y.", strtotime($sutra1));
 }
 
-$h = array();
-$desc = array();
+// $h = array();
+// $desc = array();
 
 
-$keys = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
-foreach ($keys as $key) {
-    $h[$key] = 0;
-    $h['09:30'] = 3;
-    $status['09:30'] = 1;
-    $h['13:00'] = 4;
-    $status['13:00'] = 2;
-    $h['17:30'] = 3;
-    $status['17:30'] = 1;
-    $desc[$key] = 'alo-' . $key;
-}
-
+// $keys = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
+// foreach ($keys as $key) {
+//     $h[$key] = 0;
+//     $h['09:30'] = 3;
+//     $status['09:30'] = 1;
+//     $h['13:00'] = 4;
+//     $status['13:00'] = 2;
+//     $h['17:30'] = 3;
+//     $status['17:30'] = 1;
+//     $desc[$key] = 'alo-' . $key;
+// }
 
 ?>
 
@@ -176,17 +175,36 @@ foreach ($keys as $key) {
                                     <tbody>
 
                                         <?php
+
+                                        $h = array();
+                                        $desc = array();
+
+
+                                        $keys = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30'];
+                                        foreach ($keys as $key) {
+                                            $h[$key] = 0;
+                                            $h['09:30'] = 3;
+                                            $status['09:30'] = 1;
+                                            $h['13:00'] = 4;
+                                            $status['13:00'] = 2;
+                                            $h['17:30'] = 3;
+                                            $status['17:30'] = 1;
+                                            $desc[$key] = 'alo-' . $key;
+                                        }
+
+
                                         $busy = 0;
                                         $tdesc = '';
-                                        $style=' class="table-success" ';
+                                        $style = ' class="table-success" ';
                                         foreach ($keys as $key) {
                                             if ($h[$key] > 0) {
-                                                if ($status[$key]==1) {
-                                                    $style=' class="table-danger" ';
-                                                } if ($status[$key]==2) {
-                                                    $style=' class="table-warning" ';
-                                                } 
-                                                echo '<tr '.$style.'>';
+                                                if ($status[$key] == 1) {
+                                                    $style = ' class="table-danger" ';
+                                                }
+                                                if ($status[$key] == 2) {
+                                                    $style = ' class="table-warning" ';
+                                                }
+                                                echo '<tr ' . $style . '>';
                                                 echo '<td>' . $key . '</td>';
                                                 echo '<td rowspan="' . $h[$key] . '">' . $desc[$key] . '</td></tr>';
                                                 $busy = $h[$key];
