@@ -163,8 +163,8 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
     <script>
         $(document).ready(function() {
             setTimeout(function() {
-                $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-                    $("#success-alert").slideUp(200);
+                $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+                    $("#malert").slideUp(200);
                 });
             }, 1000);
         });

@@ -9,8 +9,7 @@
                     <a href="/../index.php" class="btn btn-sm btn-outline-light">Nazad na <strong> frizeri.u.nisu.rs</strong></a>
             </ul>
 
-
-
+            
             <ul class="navbar-nav ml-auto">
                 <a href="logout.php" class="btn btn-sm btn-outline-light">log<strong>OUT</strong></a>
             </ul>

@@ -117,7 +117,7 @@ $order_result=array();
                             <?php
                             if ($_SESSION['sucess_message'] <> '') {
                             ?>
-                                <div class="alert alert-success text-center" id="success-alert">
+                                <div class="alert alert-success text-center" id="malert">
                                     <?php echo $_SESSION['sucess_message']; ?>
                                 </div>
                             <?php
@@ -125,7 +125,7 @@ $order_result=array();
                             }
                             if ($_SESSION['fail_message'] <> '') {
                             ?>
-                                <div class="alert alert-danger text-center" id="success-alert">
+                                <div class="alert alert-danger text-center" id="malert">
                                     <?php echo $_SESSION['fail_message']; ?>
                                 </div>
                             <?php
@@ -290,8 +290,8 @@ echo $since_start->s.' seconds<br>';
 <script>
 $(document).ready(function () {
     setTimeout(function () { 
-    $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-    $("#success-alert").slideUp(200);
+    $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+    $("#malert").slideUp(200);
   });
 }, 1000);
 });

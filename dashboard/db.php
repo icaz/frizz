@@ -23,17 +23,9 @@ if(!function_exists('protect_page')){
 		$sajt="firzeri.u.nisu.rs";
 		/////////////////// SAJT ///////////////////////////
 
-		if (logged_in() === false) {
+		if (logged_in() == false) {
 			header ('Location: login.php');
 			exit ();
-		} elseif (logged_in() === true) {
-			if (isset($_SESSION['site']) && $_SESSION['site'] == $sajt) {
-				header('Location: index.php');
-				exit();
-			  } else {
-				header('Location: login.php');
-				exit();
-			  }
-		}
+		} 
 	}
 }

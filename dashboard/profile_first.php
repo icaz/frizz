@@ -6,6 +6,7 @@ if (logged_in() == false) {
     header('Location: login.php');
     exit();
 }
+
 $name = $_SESSION['name'];
 $id = $_SESSION['id'];
 if ($result = $mysqli->query("SELECT * FROM salon_admin WHERE id='$id'")) {
@@ -15,20 +16,88 @@ if ($result = $mysqli->query("SELECT * FROM salon_admin WHERE id='$id'")) {
         header('Location: salon_select.php?frizer_id=' . $id . '');
     }
 }
+
 include 'head.php';
 ?>
 
 <body class="hold-transition sidebar-mini">
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Label">Zakaži</h5>
+                    <button name="body" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="reserve.php" method="POST">
+                        <div class="form-group form-group-sm">
+                            <textarea name="body" class="form-control" id="message-text" placeholder="Usluga"></textarea>
+                            <input type="hidden" name="product_id" value="1">
+                        </div>
+
+
+                        <div class="form-group form-group-sm">
+                            <input name="author" type="text" class="form-control input-sm" id="comment-name" placeholder="Upit">
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <?php $a = rand(0, 10);
+                            $b = rand(0, 10);
+                            $c = $a + $b ?>
+                            <input type="hidden" name="rnd_zbir" value="<?php echo $c; ?>">
+                            <div class="input-group justify-content-center">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="zbir"><?php echo 'Koliko je: ' . $a . ' + ' . $b; ?></span>
+                                </div>
+                                <input id="zbir" name="zbir" type="number" size="3" class="form-control input-sm col-3" required>
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Zatvori</button>
+                    <button type="submit" class="btn btn-primary">Zakaži</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
     <div class="wrapper">
+
         <?php
         include 'navbar.php';
         ?>
+
+
         <?php
         include 'sidebar.php';
         ?>
+
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Main content -->
+
             <section class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -54,7 +123,7 @@ include 'head.php';
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="register_salon.php" method="post">
+                            <form action="register_frizz.php" method="post">
                                 <!-- Profile Image -->
                                 <div class="card card-primary card-outline">
                                     <div class="card-body box-profile">
@@ -62,18 +131,22 @@ include 'head.php';
                                             <img class="profile-user-img img-fluid img-circle" src="img/avatar.png" alt="User profile picture">
                                         </div>
                                         <br>
+
                                         <input class="form-control form-control-sm" type="text" placeholder="Unesite ime salona">
                                         <p class="font-weight-bold text-center">Ime salona</p>
                                         <input class="form-control form-control-sm" type="text" placeholder="Unesite telefon">
                                         <p class="font-weight-bold text-center">Telefon</p>
                                         <input class="form-control form-control-sm" type="text" placeholder="Unesite adresu salona">
                                         <p class="font-weight-bold text-center">Adresa</p>
+
                                         <button id="mySubmit" name="btn" value="1" type="submit" class="btn btn-primary btn-block">Sačuvaj</button>
+
                             </form>
                         </div>
                         <!-- /.card-body -->
                     </div>
                     <!-- /.card -->
+
                 </div>
                 <!-- /.col -->
                 <div class="col-md-9">

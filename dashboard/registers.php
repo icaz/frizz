@@ -9,44 +9,59 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
 
     if (isset($_POST['email']) && $_POST['email'] != "") {
         $email = $mysqli->escape_string($_POST['email']);
+      
         $result = $mysqli->query("SELECT * FROM frizer WHERE email='$email'");
         if ($result->num_rows > 0) {
-            $_SESSION['fail_message'] = $email . '</strong></u> je već registrovan.';
+            $_SESSION['fail_message'] = $email . ' je već registrovan kao Salon';
             $email_value = ' value="' . $email . '"';
+            echo $email_ok = false;
         } elseif ($result->num_rows == 0) {
-            $email_value = ' value="' . $email . '"';
-            $email_ok = true;
-        }
+            $result2 = $mysqli->query("SELECT * FROM user WHERE email='$email'");
+            if ($result2->num_rows > 0) {
+                $_SESSION['fail_message'] = $email . ' je već registrovan kao korisnik';
+                $email_value = ' value="' . $email . '"';
+                $email_ok = false;
+            } elseif ($result2->num_rows == 0) {
+                $email_ok = true;
+            }
+          }
     }
 
     $pass = $mysqli->escape_string($_POST['pass']);
     $name = $mysqli->escape_string($_POST['name']);
     $name_value = ' value="' . $name . '"';
-    if (strlen($pass) < 2 && $email_ok == true) {
-        $_SESSION['fail_message'] = 'Lozinka ima manje od 2 karaktera.';
-    } else {
-        //$reg_ip =  $_SERVER['REMOTE_ADDR'];
-        $hash = $mysqli->escape_string(md5(rand(0, 1000)));
-
-        $pass = $mysqli->escape_string(password_hash($_POST['pass'], PASSWORD_BCRYPT));
-
-        date_default_timezone_set('Europe/Belgrade');
-        setlocale(LC_TIME, array('sr_CS.UTF-8', 'sr.UTF-8'));
-
-        $register_date = date('Y-m-d H:i:s');
-
-        $sql = "INSERT INTO frizer (name, email, lozinka, hash, reg_date)"
-            . "VALUES ('$name', '$email', '$pass', '$hash', '$register_date')";
-
-        if ($mysqli->query($sql)) {
-            $_SESSION['success_message'] = 'Uspešno ste se registrovali!';
-            //include('mail_it.php');
-            //echo mail_register($email, $name, $hash);
-            $_SESSION['email'] = $email;
-            $_SESSION['name'] = $name;
-            header('Location: success.php');
+    if ($email_ok == true) {
+        if (strlen($pass) < 2 ) {
+            if (isset($_SESSION['fail_message'])){
+                $_SESSION['fail_message'] .= '<br>Lozinka ima manje od 2 karaktera.';
+            } else {
+                $_SESSION['fail_message'] = '<br>Lozinka ima manje od 2 karaktera.';
+            }
+            
         } else {
-            $_SESSION['fail_message'] = $email . 'Problem sa registracijom';
+            //$reg_ip =  $_SERVER['REMOTE_ADDR'];
+            $hash = $mysqli->escape_string(md5(rand(0, 1000)));
+
+            $pass = $mysqli->escape_string(password_hash($_POST['pass'], PASSWORD_BCRYPT));
+
+            date_default_timezone_set('Europe/Belgrade');
+            setlocale(LC_TIME, array('sr_CS.UTF-8', 'sr.UTF-8'));
+
+            $register_date = date('Y-m-d H:i:s');
+
+            $sql = "INSERT INTO frizer (name, email, lozinka, hash, reg_date)"
+                . "VALUES ('$name', '$email', '$pass', '$hash', '$register_date')";
+
+            if ($mysqli->query($sql)) {
+                $_SESSION['success_message'] = 'Uspešno ste se registrovali!';
+                //include('mail_it.php');
+                //echo mail_register($email, $name, $hash);
+                $_SESSION['email'] = $email;
+                $_SESSION['name'] = $name;
+                header('Location: success.php');
+            } else {
+                $_SESSION['fail_message'] = $email . 'Problem sa registracijom';
+            }
         }
     }
 }
@@ -95,9 +110,9 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
                 include 'info.php';
                 ?>
 
-                <form action="registerf.php" method="post">
+                <form action="registers.php" method="post">
                     <div class="input-group mb-3">
-                        <input name="name" type="text" class="form-control" placeholder="Ime Salona" <?php echo $name_value; ?> required autocomplete="off">
+                        <input name="name" type="text" class="form-control" placeholder="Menadžer Salona" <?php echo $name_value; ?> required autocomplete="off">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -163,8 +178,8 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
     <script>
         $(document).ready(function() {
             setTimeout(function() {
-                $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-                    $("#success-alert").slideUp(200);
+                $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+                    $("#malert").slideUp(200);
                 });
             }, 1000);
         });

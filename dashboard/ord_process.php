@@ -59,7 +59,7 @@ include 'head.php';
                             <?php
                             if (isset ($_SESSION['sucess_message']) && $_SESSION['sucess_message'] <> '') {
                             ?>
-                                <div class="alert alert-success text-center" id="success-alert">
+                                <div class="alert alert-success text-center" id="malert">
                                     <?php echo $_SESSION['sucess_message']; ?>
                                 </div>
                             <?php
@@ -67,7 +67,7 @@ include 'head.php';
                             }
                             if (isset ($_SESSION['fail_message']) && $_SESSION['fail_message'] <> '') {
                             ?>
-                                <div class="alert alert-danger text-center" id="success-alert">
+                                <div class="alert alert-danger text-center" id="malert">
                                     <?php echo $_SESSION['fail_message']; ?>
                                 </div>
                             <?php
@@ -254,8 +254,8 @@ include 'head.php';
 <script>
     $(document).ready(function() {
         setTimeout(function() {
-            $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-                $("#success-alert").slideUp(200);
+            $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+                $("#malert").slideUp(200);
             });
         }, 1000);
     });

@@ -33,7 +33,7 @@ include 'head.php';
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1>Profil -
+                            <h1>Menadžer -
                                 <?php
                                 echo $name;
                                 ?>
@@ -54,7 +54,7 @@ include 'head.php';
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-3">
-                            <form action="register_salon.php" method="post">
+                            <form action="salon_profile.php" method="post">
                                 <!-- Profile Image -->
                                 <div class="card card-primary card-outline">
                                     <div class="card-body box-profile">

@@ -11,6 +11,7 @@ $pass_validate = '';
 $err_pass = '';
 $mach_pass = '';
 
+
 $name_ok = false;
 $email_ok = false;
 
@@ -19,7 +20,7 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
     $name = $mysqli->escape_string($_POST['name']);
     $result = $mysqli->query("SELECT * FROM user WHERE name='$name'");
     if ($result->num_rows > 0) {
-      $_SESSION['warning_message'] = 'Već postoji korisnik sa imenom <u><strong> ' . $name . '.</strong></u><br> To možete kasnije promeniti u profilu...';
+      $_SESSION['warning_message'] = 'Već postoji korisnik sa imenom <strong> ' . $name . '.</strong><br> To možete kasnije promeniti u profilu...';
     }
     if (strlen($name) > 2) {
       $name_validate = ' is-valid';
@@ -70,21 +71,22 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
 
       $register_date = date('Y-m-d H:i:s');
 
-      echo $sql = "INSERT INTO user (name, email, password, hash, reg_date)"
+      $sql = "INSERT INTO user (name, email, lozinka, hash, reg_date)"
         . "VALUES ('$name', '$email', '$pass', '$hash', '$register_date')";
 
       if ($mysqli->query($sql)) {
-        $_SESSION['message'] = 'Uspešno ste se registrovali!';
-        include('mail_it.php');
-        echo mail_register($email, $name, $hash);
-        header('Location: success.php');
+        $_SESSION['success_message'] = "Uspešno ste se registrovali.";
+        //include('mail_it.php');
+        //mail_register($email, $name, $hash);
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $name;
+    header('Location: success.php');
       } else {
-        echo "problem....";
+        $_SESSION['fail_message'] = "Problem sa registracijom!";
       }
     }
   }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="rs">
@@ -124,11 +126,6 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
     <div class="card">
       <div class="card-body register-card-body">
         <p class="login-box-msg">Unesi podatke za registraciju</p>
-
-        <?php
-        include 'info.php';
-        ?>
-
         <form action="register.php" method="post">
           <div class="input-group mb-3">
             <input name="name" type="text" class="form-control <?php echo $name_validate; ?>" placeholder="Kako se zoveš?" <?php echo $name_value; ?> required autocomplete="off">
@@ -207,8 +204,8 @@ if (isset($_POST['btn']) && $_POST['btn'] == "1") {
   <script>
     $(document).ready(function() {
       setTimeout(function() {
-        $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-          $("#success-alert").slideUp(200);
+        $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+          $("#malert").slideUp(200);
         });
       }, 1000);
     });

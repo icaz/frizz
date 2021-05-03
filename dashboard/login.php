@@ -7,9 +7,36 @@ $err_pass = '';
 $pass_validate = '';
 $not_active = '';
 
+if (isset($_COOKIE["kalendar"]) && ($_COOKIE["kalendar"] == 'frizeri')) {
+  if ($_COOKIE["type"] == 'salon') {
+    $id = $_COOKIE["id"];
+    $result = $mysqli->query("SELECT * FROM frizer WHERE id='$id'");
+    $frizer = $result->fetch_assoc();
+    if ($frizer['active'] == 1) {
+      $_SESSION['logged_in'] = true;
+      $_SESSION['id'] = $id;
+      $_SESSION['name'] = $frizer['name'];
+      $_SESSION['type'] = 'salon';
+      header('Location: profile.php');
+    } elseif ($frizer['active'] != 1) {
+      header('Location: activate.php');
+    }
+  } elseif ($_COOKIE["type"] == 'user') {
+    $id = $_COOKIE["id"];
+    $result = $mysqli->query("SELECT * FROM user WHERE id='$id'");
+    $user = $result->fetch_assoc();
+    if ($user['active'] == 1) {
+      $_SESSION['logged_in'] = true;
+      $_SESSION['id'] = $id;
+      $_SESSION['name'] = $user['name'];
+      $_SESSION['type'] = 'user';
+      header('Location: index.php');
+    } elseif ($user['active'] != 1) {
+      header('Location: activate.php');
+    }
+  }
+}
 
-//protect_page();
-var_dump($_SESSION);
 
 if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "") {
   $email = $mysqli->escape_string($_POST['email']);
@@ -17,7 +44,7 @@ if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "")
 
   if ($result->num_rows == 0) {
     $result2 = $mysqli->query("SELECT * FROM frizer WHERE email='$email'");
-    if ($result->num_rows == 0) {
+    if ($result2->num_rows == 0) {
       $err_mail = '<div class="invalid-feedback">
       Korisnik sa ovim email-om nije registrovan.
       </div>';
@@ -26,24 +53,28 @@ if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "")
     } else {
       $frizer = $result2->fetch_assoc();
       $err_mail = '<div class="valid-feedback">
-        Email je registrovan.
+        Email je registrovan kao Salon.
         </div>';
       $mail_validate = ' is-valid';
       $email_value = ' value="' . $email . '"';
 
-      if (password_verify($_POST['password'], $frizer['password'])) {
+      if (password_verify($_POST['password'], $frizer['lozinka'])) {
         if ($frizer['active'] == 1) {
-          $_SESSION['email'] = $frizer['email'];
-          $_SESSION['name'] = $frizer['name'];
-
           $_SESSION['logged_in'] = true;
+          $_SESSION['name'] = $frizer['name'];
+          $_SESSION['id'] = $frizer['id'];
+          $_SESSION['type'] = 'salon';
 
           if ($_POST['rememberme'] == 'set') {
-            setcookie('email', $_POST['email'], time() + 60 * 60 * 24 * 365);
-          } else {
-            // setcookie('email', $_POST['email'], false);
+            setcookie('kalendar', 'frizeri', time() + (60 * 60 * 24 * 365), "/");
+            setcookie('type', 'salon', time() + (60 * 60 * 24 * 365), "/");
+            setcookie('id', $frizer['id'], time() + (60 * 60 * 24 * 365), "/");
+          } elseif ($_POST['rememberme'] != 'set') {
+            setcookie('kalendar', 'frizeri', time() - 3600, "/");
+            setcookie('type', '', time() - 3600, "/");
+            setcookie('id', '', time() - 3600, "/");
           }
-          header("location: index.php");
+          header("location: profile.php");
         } elseif ($frizer['active'] == 0) {
           $not_active = '
             <div class="alert alert-info alert-dismissible small">
@@ -67,18 +98,25 @@ if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "")
     $mail_validate = ' is-valid';
     $email_value = ' value="' . $email . '"';
 
-    if (password_verify($_POST['password'], $user['password'])) {
+    if (password_verify($_POST['password'], $user['lozinka'])) {
       if ($user['active'] == 1) {
-        $_SESSION['email'] = $user['email'];
-        $_SESSION['name'] = $user['name'];
-
         $_SESSION['logged_in'] = true;
+        $_SESSION['name'] = $user['name'];
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['type'] = 'user';
 
         if ($_POST['rememberme'] == 'set') {
-          setcookie('email', $_POST['email'], time() + 60 * 60 * 24 * 365);
+          setcookie('kalendar', 'frizeri', time() + (60 * 60 * 24 * 365), "/");
+          setcookie('type', 'user', time() + (60 * 60 * 24 * 365), "/");
+          setcookie('id', $user['id'], time() + (60 * 60 * 24 * 365), "/");
         } else {
-          // setcookie('email', $_POST['email'], false);
+          if (isset($_COOKIE["email"]) && ($_COOKIE["email"] == $_POST['email'])) {
+            setcookie('kalendar', 'frizeri', time() - 3600, "/");
+            setcookie('type', '', time() - 3600, "/");
+            setcookie('id', '', time() - 3600, "/");
+          }
         }
+
         header("location: index.php");
       } elseif ($user['active'] == 0) {
         $not_active = '
@@ -146,6 +184,10 @@ if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "")
     <div class="card">
       <div class="card-body login-card-body">
 
+        <?php
+        include 'info.php';
+        ?>
+
         <form action="login.php" method="post">
           <div class="input-group mb-3">
             <input type="email" name="email" class="form-control<?php echo $mail_validate; ?>" placeholder="Email" <?php echo $email_value; ?> required>
@@ -206,6 +248,16 @@ if (isset($_POST['email']) && $_POST['email'] != "" && $_POST['password'] != "")
 
   <!-- AdminLTE App -->
   <script src="dist/js/adminlte.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      setTimeout(function() {
+        $("#malert").fadeTo(2000, 500).slideUp(500, function() {
+          $("#malert").slideUp(200);
+        });
+      }, 1000);
+    });
+  </script>
+
 </body>
 
 </html>

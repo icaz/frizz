@@ -22,6 +22,12 @@ session_start();
         session_unset();
         session_destroy();
         echo 'Session was destroyed';
+
+        setcookie('kalendar', 'frizeri', time() - 3600, "/");
+        setcookie('type', '', time() - 3600, "/");
+        setcookie('id', '', time() - 3600, "/");
+
+
         header("location: /dashboard/");
         ?>
     </div>
